@@ -11,10 +11,24 @@ const ComparisonTable: React.FC = () => {
       highlight: true
     },
     {
+      category: "열 분포 제어",
+      samsungLg: "중앙 집중 가열 (중앙 과열/외곽 미가열)",
+      smartCooking: "다지점 분석 기반 열 편차 자동 보정",
+      patentTech: "Uniformity Boost 펄스 화력 제어",
+      highlight: true
+    },
+    {
       category: "조리 자동화",
       samsungLg: "수동 출력/시간 조절 중심 (레시피 스캔)",
       smartCooking: "생성형 AI 모델의 조리 형태 스스로 인지",
       patentTech: "센서 기반 화력 및 목표 온도 직접 제어",
+      highlight: false
+    },
+    {
+      category: "안전 최대 온도",
+      samsungLg: "소재 한계까지 가열 (탄화 위험)",
+      smartCooking: "지능형 180°C 하드 리밋 (Safety Lock)",
+      patentTech: "과열 전조 증상 0.1초 즉각 감지",
       highlight: false
     },
     {
@@ -30,13 +44,6 @@ const ComparisonTable: React.FC = () => {
       smartCooking: "외란 패턴(넘침, 오염) 실시간 AI 분석",
       patentTech: "95°C부터 화력 조절로 넘침 사전 방지",
       highlight: true
-    },
-    {
-      category: "하드웨어 특징",
-      samsungLg: "일체형 상판 / 일반 워킹코일",
-      smartCooking: "생성형 제어 모델 / 실시간 맞춤 조리",
-      patentTech: "분리 상판(원가 절감) / PCB 적층 코일",
-      highlight: false
     }
   ];
 
@@ -80,8 +87,8 @@ const ComparisonTable: React.FC = () => {
           <span className="text-xs text-slate-400">실시간 생성형 제어 모델로 조리 상황별 맞춤 대응</span>
         </div>
         <div className="glass px-6 py-3 rounded-2xl border border-amber-500/20 flex items-center gap-3">
-          <span className="text-[10px] font-black text-amber-400 uppercase">Patent-08883</span>
-          <span className="text-xs text-slate-400">오프셋 센서 배치로 온도 측정 정확도 극대화</span>
+          <span className="text-[10px] font-black text-amber-400 uppercase">Uniformity+</span>
+          <span className="text-xs text-slate-400">다중 센서 퓨전으로 중앙/외곽 열 평형 유지</span>
         </div>
       </div>
     </div>

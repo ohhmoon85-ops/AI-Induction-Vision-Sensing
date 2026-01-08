@@ -19,8 +19,9 @@ export interface CookingState {
   isBoilingOver: boolean;
   disturbanceDetected: boolean;
   energyConsumed: number;
-  safetyVerified: boolean; // 특허 기반 안전 확증 상태
+  safetyVerified: boolean;
   controlModel: 'Generative' | 'Static';
+  heatUniformity?: number; // 열 균일도 (0-100%)
 }
 
 export interface Recipe {
@@ -35,6 +36,19 @@ export interface Recipe {
 
 export const RECIPES: Recipe[] = [
   {
+    id: 'pancake',
+    name: '전·부침 요리 (Uniform Pancake)',
+    targetTemp: 175,
+    icon: '🥞',
+    safetyRequirement: '중앙-외곽 온도 편차 30°C 이내 유지',
+    description: '특허 기술 기반 열 분포 최적화: 중앙(210)과 주변부(220)의 온도차를 실시간 분석하여 전이 타지 않도록 화력을 펄스 제어합니다. (최대 180°C 제한 안전 설계)',
+    stages: [
+      { time: 0, instruction: '팬 예열 및 균일도 체크' },
+      { time: 40, instruction: '재료 투입 및 Uniformity Boost 활성' },
+      { time: 80, instruction: '외곽 전도 대기 및 최적 온도 유지' }
+    ]
+  },
+  {
     id: 'ramen',
     name: '라면 끓이기 (Ramen)',
     targetTemp: 100,
@@ -48,38 +62,12 @@ export const RECIPES: Recipe[] = [
     ]
   },
   {
-    id: 'kimchi-stew',
-    name: '김치찌개 (Kimchi Stew)',
-    targetTemp: 100,
-    icon: '🥘',
-    safetyRequirement: '장시간 심머링 및 넘침 방지',
-    description: '특허 10-2022-0021808: 찌개가 끓어 넘치기 직전의 미세한 파동을 감지하여 화력을 조절, 깊은 맛을 내는 최적의 심머링 온도를 유지합니다.',
-    stages: [
-      { time: 0, instruction: '초기 가열' },
-      { time: 50, instruction: '비점 감지 및 화력 다운' },
-      { time: 100, instruction: '지능형 심머링 (깊은 맛 추출)' }
-    ]
-  },
-  {
-    id: 'seaweed-soup',
-    name: '아침 자율 예약 조리 (Morning Reservation)',
-    targetTemp: 100,
-    icon: '🥣',
-    safetyRequirement: '용기 내 내용물 유무 실측 필요',
-    description: '특허 10-2708883: 열원부를 벗어난 곳에서 온도를 직접 측정하여 넘침을 사전에 방지하고 안전을 확증합니다.',
-    stages: [
-      { time: 0, instruction: '예약 대기 모드' },
-      { time: 20, instruction: '센서 어레이 안전 확증 (Safety Lock ON)' },
-      { time: 50, instruction: '자율 가열 시작' }
-    ]
-  },
-  {
     id: 'fried-fish',
     name: '정밀 온도 튀김 (Fried Fish)',
     targetTemp: 180,
     icon: '🐟',
     safetyRequirement: '급격한 온도 하락 실시간 복구',
-    description: '특허 10-2022-0021808: 냉동 생선 투입으로 인한 온도 급락을 0.1초 만에 감지하여 180도를 유지합니다.',
+    description: '특허 10-2022-0021808: 냉동 생선 투입으로 인한 온도 급락을 0.1초 만에 감지하여 180도를 초과하지 않도록 안전하게 유지합니다.',
     stages: [
       { time: 0, instruction: '가열 시작' },
       { time: 60, instruction: '냉동 생선 투입' },
