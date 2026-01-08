@@ -1,8 +1,8 @@
 
 export enum Brand {
   AI_INDUCTION = 'AI-Induction (Patent Offset Sensing)',
-  SAMSUNG = 'Samsung Bespoke AI (Blind Sensing)',
-  LG = 'LG DIOS (Blind Sensing)'
+  SAMSUNG = 'S사 Bespoke AI (Blind Sensing)',
+  LG = 'L사 DIOS (Blind Sensing)'
 }
 
 export interface SensorData {

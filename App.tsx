@@ -34,7 +34,7 @@ const App: React.FC = () => {
             <span className="gradient-text">앞서가는 눈(Eye).</span>
           </h2>
           <p className="text-slate-400 max-w-4xl mx-auto text-base sm:text-2xl font-medium leading-relaxed px-4 tracking-tight">
-            삼성·LG가 프로그램된 '시간'에 의존할 때, AI-Induction은 <br className="hidden sm:block"/>
+            S사·L사가 프로그램된 '시간'에 의존할 때, AI-Induction은 <br className="hidden sm:block"/>
             특허받은 **비접촉 실측 센서**로 조리 상황을 실시간으로 읽어냅니다.
           </p>
           <div className="flex flex-wrap justify-center gap-6 pt-6">
@@ -147,8 +147,8 @@ const App: React.FC = () => {
             Intellectual Property Reserved © 2026 AI-Induction Next-Gen Kitchen
          </p>
          <div className="flex justify-center gap-10 opacity-30 grayscale hover:grayscale-0 transition-all">
-            <span className="font-black italic text-xl">SAMSUNG</span>
-            <span className="font-black italic text-xl">LG ELECTRONICS</span>
+            <span className="font-black italic text-xl">S-CORP</span>
+            <span className="font-black italic text-xl">L-CORP</span>
             <span className="font-black italic text-xl text-emerald-500">AI-INDUCTION</span>
          </div>
       </footer>

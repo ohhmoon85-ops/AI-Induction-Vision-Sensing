@@ -47,7 +47,7 @@ const ComparisonTable: React.FC = () => {
           <thead>
             <tr className="bg-slate-900/50 border-b border-white/10">
               <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">비교 항목</th>
-              <th className="p-6 text-[10px] font-black text-blue-400 uppercase tracking-widest">삼성 / LG (기성 제품)</th>
+              <th className="p-6 text-[10px] font-black text-blue-400 uppercase tracking-widest">S사 / L사 (기성 제품)</th>
               <th className="p-6 text-[10px] font-black text-emerald-400 uppercase tracking-widest">AI-Induction (스마트 쿠킹)</th>
               <th className="p-6 text-[10px] font-black text-amber-400 uppercase tracking-widest">AI-Induction (특허 기술)</th>
             </tr>
