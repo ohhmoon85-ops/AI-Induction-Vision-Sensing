@@ -124,13 +124,13 @@ const CookingSimulation: React.FC<Props> = ({ recipe, isActive, onComplete }) =>
               <div key={brand} className={`p-6 rounded-[2.5rem] glass border relative overflow-hidden transition-all duration-300 ${isAI ? 'border-emerald-500/50 bg-emerald-500/5 shadow-glow-emerald' : 'border-white/5 opacity-70'}`}>
                 {s.disturbanceDetected && !isAI && recipe.id === 'pancake' && (
                   <div className="absolute inset-0 bg-orange-600/10 animate-pulse flex items-center justify-center">
-                    <div className="bg-red-600/90 text-[10px] font-black px-4 py-1.5 rounded-full text-white shadow-2xl tracking-widest">CENTER BURNING</div>
+                    <div className="bg-red-600/90 text-xs font-black px-4 py-1.5 rounded-full text-white shadow-2xl tracking-widest">CENTER BURNING</div>
                   </div>
                 )}
                 <div className="flex justify-between items-center mb-6">
                    <div className="flex flex-col">
-                      <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">{brand.split(' ')[0]}</span>
-                      <span className="text-[8px] text-slate-600 font-bold">{isAI ? 'Multi-Sensing (210/220)' : 'Blind Central Sensing'}</span>
+                      <span className="text-xs font-black text-slate-500 uppercase tracking-tighter">{brand.split(' ')[0]}</span>
+                      <span className="text-[10px] text-slate-600 font-bold">{isAI ? 'Multi-Sensing (210/220)' : 'Blind Central Sensing'}</span>
                    </div>
                    {isAI && <div className={`w-3 h-3 rounded-full ${s.heatUniformity && s.heatUniformity > 90 ? 'bg-emerald-500 animate-pulse' : 'bg-orange-500'}`}></div>}
                 </div>
@@ -141,7 +141,7 @@ const CookingSimulation: React.FC<Props> = ({ recipe, isActive, onComplete }) =>
 
                 {/* Uniformity Gauge */}
                 <div className="mb-6 space-y-1">
-                   <div className="flex justify-between text-[8px] font-black text-slate-500 uppercase">
+                   <div className="flex justify-between text-[10px] font-black text-slate-500 uppercase">
                       <span>Heat Uniformity</span>
                       <span className={isAI ? 'text-emerald-400' : 'text-orange-400'}>{Math.round(s.heatUniformity || 0)}%</span>
                    </div>
@@ -150,7 +150,7 @@ const CookingSimulation: React.FC<Props> = ({ recipe, isActive, onComplete }) =>
                    </div>
                 </div>
 
-                <div className={`py-3 rounded-2xl text-[10px] font-black text-center uppercase tracking-widest ${isAI ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-500'}`}>
+                <div className={`py-3 rounded-2xl text-xs font-black text-center uppercase tracking-widest ${isAI ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-500'}`}>
                   {s.status}
                 </div>
                 
@@ -162,7 +162,7 @@ const CookingSimulation: React.FC<Props> = ({ recipe, isActive, onComplete }) =>
           })}
         </div>
         <div className="h-72 glass p-8 rounded-[3rem] border border-white/5 relative overflow-hidden">
-           <div className="absolute top-4 left-8 text-[10px] font-black text-slate-500 uppercase tracking-widest">Real-time Multi-Point Heat Gradient</div>
+           <div className="absolute top-4 left-8 text-xs font-black text-slate-500 uppercase tracking-widest">Real-time Multi-Point Heat Gradient</div>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={history}>
               <defs>
@@ -174,7 +174,7 @@ const CookingSimulation: React.FC<Props> = ({ recipe, isActive, onComplete }) =>
               <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
               <XAxis dataKey="time" hide />
               <YAxis domain={[20, 240]} hide />
-              <ReferenceLine y={180} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'right', value: 'Safety Limit', fill: '#ef4444', fontSize: 9 }} />
+              <ReferenceLine y={180} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'right', value: 'Safety Limit', fill: '#ef4444', fontSize: 10 }} />
               <Area type="monotone" dataKey="ai" stroke="#10b981" strokeWidth={4} fill="url(#colorAi)" isAnimationActive={false} />
               <Area type="monotone" dataKey="competitor" stroke="#f97316" strokeWidth={1.5} fill="transparent" strokeDasharray="6 4" isAnimationActive={false} opacity={0.4} />
             </AreaChart>
@@ -185,7 +185,7 @@ const CookingSimulation: React.FC<Props> = ({ recipe, isActive, onComplete }) =>
       <div className="glass p-10 rounded-[3rem] border border-white/5 flex flex-col justify-start gap-6 relative overflow-hidden min-h-[500px]">
          <div className="absolute -right-20 -top-20 w-40 h-40 bg-emerald-500/10 blur-[100px] rounded-full"></div>
          <div className="space-y-4">
-            <h5 className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.4em]">Efficiency Core Drivers</h5>
+            <h5 className="text-xs font-black text-emerald-400 uppercase tracking-[0.4em]">Efficiency Core Drivers</h5>
             <p className="text-2xl font-bold leading-[1.1] tracking-tight text-white italic">"중앙 과열을 억제하고 전체 균일도를 확보"</p>
          </div>
 
@@ -201,8 +201,8 @@ const CookingSimulation: React.FC<Props> = ({ recipe, isActive, onComplete }) =>
                   <i className={`fas ${item.icon} text-emerald-400 group-hover:text-white text-sm`}></i>
                 </div>
                 <div className="space-y-1">
-                  <h6 className="text-[11px] font-black text-white uppercase tracking-tighter">{item.title}</h6>
-                  <p className="text-[10px] text-slate-400 leading-tight font-medium">{item.desc}</p>
+                  <h6 className="text-sm font-black text-white uppercase tracking-tighter">{item.title}</h6>
+                  <p className="text-sm text-slate-400 leading-tight font-medium">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -210,11 +210,11 @@ const CookingSimulation: React.FC<Props> = ({ recipe, isActive, onComplete }) =>
 
          <div className="mt-auto pt-6 border-t border-white/5 flex items-center justify-between">
             <div className="flex flex-col">
-              <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Control Status</span>
-              <span className="text-xs font-bold text-emerald-400 italic">UNIFORMITY BOOST ACTIVE</span>
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Control Status</span>
+              <span className="text-sm font-bold text-emerald-400 italic">UNIFORMITY BOOST ACTIVE</span>
             </div>
             <div className="text-right flex flex-col items-end">
-              <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Energy Class</span>
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Energy Class</span>
               <span className="text-lg font-black text-white italic tracking-tighter">NEXT-GEN S+</span>
             </div>
          </div>

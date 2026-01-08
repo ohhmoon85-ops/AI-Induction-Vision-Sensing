@@ -39,7 +39,7 @@ const App: React.FC = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-6 pt-6">
              {["실시간 생성형 제어", "비접촉 IR 센싱", "PCB 적층 워킹코일", "분리형 상판 구조"].map(tag => (
-               <span key={tag} className="text-[10px] font-black px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-500 uppercase tracking-widest">{tag}</span>
+               <span key={tag} className="text-xs font-black px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-500 uppercase tracking-widest">{tag}</span>
              ))}
           </div>
         </section>
@@ -52,7 +52,7 @@ const App: React.FC = () => {
                 <div className="flex-1 space-y-8 text-center lg:text-left">
                    <div className="space-y-2">
                       <h3 className="text-4xl font-black tracking-tight italic">Live Cooking Simulation</h3>
-                      <p className="text-slate-500 font-bold uppercase text-xs tracking-widest">라면부터 튀김까지, 인덕션이 직접 판단합니다.</p>
+                      <p className="text-slate-500 font-bold uppercase text-sm tracking-widest">라면부터 튀김까지, 인덕션이 직접 판단합니다.</p>
                    </div>
                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                      {RECIPES.map(recipe => (
@@ -66,7 +66,7 @@ const App: React.FC = () => {
                          }`}
                        >
                          <span className="text-3xl group-hover:animate-bounce">{recipe.icon}</span>
-                         <span className="text-[10px] font-black uppercase tracking-widest text-center leading-tight">
+                         <span className="text-xs font-black uppercase tracking-widest text-center leading-tight">
                             {recipe.name.split(' (')[0]}
                          </span>
                        </button>
@@ -120,7 +120,7 @@ const App: React.FC = () => {
                   더 깊이 있는<br/>
                   <span className="text-emerald-400">시뮬레이션을 만나보세요.</span>
                 </h3>
-                <p className="text-slate-400 max-w-2xl mx-auto text-sm sm:text-lg font-medium leading-relaxed">
+                <p className="text-slate-400 max-w-2xl mx-auto text-base sm:text-xl font-medium leading-relaxed">
                   특허 기술이 적용된 센서 어레이의 실시간 온도 매핑과<br/> 
                   세부적인 하드웨어 로직을 직접 확인하실 수 있는 전용 페이지로 안내합니다.
                 </p>

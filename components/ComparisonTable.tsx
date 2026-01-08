@@ -53,24 +53,24 @@ const ComparisonTable: React.FC = () => {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-900/50 border-b border-white/10">
-              <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">비교 항목</th>
-              <th className="p-6 text-[10px] font-black text-blue-400 uppercase tracking-widest">S사 / L사 (기성 제품)</th>
-              <th className="p-6 text-[10px] font-black text-emerald-400 uppercase tracking-widest">AI-Induction (스마트 쿠킹)</th>
-              <th className="p-6 text-[10px] font-black text-amber-400 uppercase tracking-widest">AI-Induction (특허 기술)</th>
+              <th className="p-6 text-xs font-black text-slate-500 uppercase tracking-widest">비교 항목</th>
+              <th className="p-6 text-xs font-black text-blue-400 uppercase tracking-widest">S사 / L사 (기성 제품)</th>
+              <th className="p-6 text-xs font-black text-emerald-400 uppercase tracking-widest">AI-Induction (스마트 쿠킹)</th>
+              <th className="p-6 text-xs font-black text-amber-400 uppercase tracking-widest">AI-Induction (특허 기술)</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
             {comparisonData.map((row, idx) => (
               <tr key={idx} className={`group transition-colors ${row.highlight ? 'bg-emerald-500/5' : 'hover:bg-white/5'}`}>
-                <td className="p-6 text-xs font-bold text-slate-400">{row.category}</td>
-                <td className="p-6 text-[11px] text-slate-500 italic">{row.samsungLg}</td>
-                <td className="p-6 text-[11px] text-emerald-100 font-medium">
+                <td className="p-6 text-sm font-bold text-slate-400">{row.category}</td>
+                <td className="p-6 text-sm text-slate-500 italic">{row.samsungLg}</td>
+                <td className="p-6 text-sm text-emerald-100 font-medium">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></div>
                     {row.smartCooking}
                   </div>
                 </td>
-                <td className="p-6 text-[11px] text-amber-100 font-medium">
+                <td className="p-6 text-sm text-amber-100 font-medium">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></div>
                     {row.patentTech}
@@ -83,12 +83,12 @@ const ComparisonTable: React.FC = () => {
       </div>
       <div className="flex flex-col md:flex-row gap-4 justify-center">
         <div className="glass px-6 py-3 rounded-2xl border border-emerald-500/20 flex items-center gap-3">
-          <span className="text-[10px] font-black text-emerald-400 uppercase">AI-Logic</span>
-          <span className="text-xs text-slate-400">실시간 생성형 제어 모델로 조리 상황별 맞춤 대응</span>
+          <span className="text-sm font-black text-emerald-400 uppercase">AI-Logic</span>
+          <span className="text-sm text-slate-400">실시간 생성형 제어 모델로 조리 상황별 맞춤 대응</span>
         </div>
         <div className="glass px-6 py-3 rounded-2xl border border-amber-500/20 flex items-center gap-3">
-          <span className="text-[10px] font-black text-amber-400 uppercase">Uniformity+</span>
-          <span className="text-xs text-slate-400">다중 센서 퓨전으로 중앙/외곽 열 평형 유지</span>
+          <span className="text-sm font-black text-amber-400 uppercase">Uniformity+</span>
+          <span className="text-sm text-slate-400">다중 센서 퓨전으로 중앙/외곽 열 평형 유지</span>
         </div>
       </div>
     </div>

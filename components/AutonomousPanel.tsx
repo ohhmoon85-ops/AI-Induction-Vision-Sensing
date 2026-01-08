@@ -92,7 +92,7 @@ const AutonomousPanel: React.FC = () => {
             </div>
 
             <div className="mb-6">
-              <span className="px-4 py-1.5 rounded-full bg-slate-800/80 border border-white/10 text-[9px] font-black text-slate-300 uppercase tracking-widest backdrop-blur-md">
+              <span className="px-4 py-1.5 rounded-full bg-slate-800/80 border border-white/10 text-[10px] font-black text-slate-300 uppercase tracking-widest backdrop-blur-md">
                 {f.patent}
               </span>
             </div>
@@ -100,7 +100,7 @@ const AutonomousPanel: React.FC = () => {
             <h5 className="text-2xl font-black mb-5 text-white tracking-tight leading-tight pr-4">
               {f.title}
             </h5>
-            <p className="text-sm text-slate-400 leading-relaxed font-medium mb-8">
+            <p className="text-base text-slate-400 leading-relaxed font-medium mb-8">
               {f.desc}
             </p>
             
@@ -113,7 +113,7 @@ const AutonomousPanel: React.FC = () => {
                  
                  <div className="flex items-center gap-2 relative z-10">
                     <span className="w-8 h-[2px] bg-emerald-500 group-hover/btn:w-12 transition-all duration-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
-                    <span className="text-[11px] font-black text-emerald-400 uppercase tracking-[0.2em] group-hover/btn:text-white transition-colors duration-300">
+                    <span className="text-xs font-black text-emerald-400 uppercase tracking-[0.2em] group-hover/btn:text-white transition-colors duration-300">
                        Detailed Logic View
                     </span>
                  </div>
