@@ -12,54 +12,51 @@
         
         :root {
             --emerald-glow: 0 0 20px rgba(16, 185, 129, 0.4);
-            --blue-glow: 0 0 20px rgba(59, 130, 246, 0.4);
         }
 
         body { 
             font-family: 'Pretendard', sans-serif; 
             background-color: #020617; 
             color: #f8fafc;
+            margin: 0;
+            padding: 0;
             overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
         }
 
         .glass { 
-            background: rgba(15, 23, 42, 0.6); 
+            background: rgba(15, 23, 42, 0.7); 
             backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.08); 
         }
 
         .shadow-glow-emerald { box-shadow: var(--emerald-glow); }
-        .shadow-glow-blue { box-shadow: var(--blue-glow); }
 
         .eye-pulse {
-            animation: eye-blink 3s infinite;
+            animation: eye-blink 3.5s infinite;
         }
 
         @keyframes eye-blink {
-            0%, 90%, 100% { transform: scaleY(1); }
-            95% { transform: scaleY(0.1); }
+            0%, 90%, 100% { transform: scaleY(1); opacity: 1; }
+            95% { transform: scaleY(0.1); opacity: 0.5; }
         }
 
         .boil-animation {
-            animation: boil-water 0.4s infinite alternate ease-in-out;
+            animation: boil-water 0.5s infinite alternate ease-in-out;
         }
 
         @keyframes boil-water {
-            from { transform: translateY(0) scale(1); }
-            to { transform: translateY(-4px) scale(1.02); }
+            from { transform: translateY(0); }
+            to { transform: translateY(-3px); }
         }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
 
         .gradient-text {
             background: linear-gradient(135deg, #34d399 0%, #3b82f6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     </style>
     <script type="importmap">
     {
@@ -74,5 +71,7 @@
 </head>
 <body>
     <div id="root"></div>
+    <!-- 이 줄이 빠지면 화면이 검게 보일 수 있습니다 -->
+    <script type="module" src="./index.tsx"></script>
 </body>
 </html>
