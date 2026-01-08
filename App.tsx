@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from './components/Header';
 import ComparisonTable from './components/ComparisonTable';
 import CookingSimulation from './components/CookingSimulation';
@@ -13,68 +13,64 @@ const App: React.FC = () => {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
-  const openVercelLink = () => {
-    window.open('https://ai-induction.vercel.app/', '_blank');
-  };
-
   return (
-    <div className="min-h-screen pb-24 lg:pb-20 bg-[#0f172a]">
+    <div className="min-h-screen pb-20 bg-[#020617] text-slate-200">
       <Header onNavClick={scrollToSection} />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 lg:mt-8 space-y-12 lg:space-y-20">
-        {/* Intro Section */}
-        <section id="technology" className="text-center space-y-4 lg:space-y-6 pt-6 lg:pt-10">
-          <div className="inline-block px-4 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[10px] lg:text-sm font-bold mb-2">
-            AI-INDUCTION : GROUND TRUTH INNOVATION
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-12 space-y-16 lg:space-y-32">
+        {/* Intro */}
+        <section id="technology" className="text-center space-y-6 pt-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] sm:text-xs font-black tracking-widest uppercase">
+             <i className="fas fa-eye"></i> Ground Truth Real-time Sensing
           </div>
-          <h2 className="text-3xl md:text-6xl font-extrabold bg-gradient-to-r from-blue-400 via-emerald-400 to-blue-500 bg-clip-text text-transparent leading-tight px-2">
-            Eye of the Kitchen:<br/><span className="text-white">Blind AI vs Vision Sensing</span>
+          <h2 className="text-4xl md:text-7xl font-black tracking-tighter leading-[0.9] px-2">
+            안대를 벗은 인덕션,<br/>
+            <span className="gradient-text">진정한 AI를 만나다.</span>
           </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto text-sm lg:text-lg leading-relaxed px-4">
-            특허(10-2708883) 기반의 <b>실측형 Vision Sensing</b> 기술.<br className="hidden lg:block"/>
-            기존 삼성/LG의 '장님(Blind)' 방식이 초래하는 에너지 낭비와 화재 위험을 해결합니다.
+          <p className="text-slate-400 max-w-2xl mx-auto text-sm sm:text-lg font-medium leading-relaxed px-4">
+            삼성·LG가 추측(Blind)할 때, AI-Induction은 직접 봅니다(Vision).<br className="hidden sm:block"/>
+            특허받은 실측 기술로 완성하는 맛과 안전의 압도적 차이.
           </p>
         </section>
 
-        {/* Comparison Simulation Area */}
-        <section id="simulation" className="space-y-6 lg:space-y-8 scroll-mt-24">
-          <div className="flex flex-col lg:flex-row justify-between items-center gap-6 glass p-6 lg:p-8 rounded-3xl border border-white/5 shadow-2xl">
-            <div className="flex flex-col gap-3 w-full">
-              <h3 className="text-lg lg:text-xl font-bold text-white text-center lg:text-left">실시간 조리 시나리오 선택</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {RECIPES.map(recipe => (
-                  <button
-                    key={recipe.id}
-                    onClick={() => { setSelectedRecipe(recipe); setIsSimulating(false); }}
-                    className={`px-3 py-3 lg:px-5 lg:py-4 rounded-2xl transition-all font-bold flex flex-col sm:flex-row items-center gap-2 lg:gap-3 border ${
-                      selectedRecipe.id === recipe.id 
-                      ? 'bg-blue-600 text-white border-blue-400 shadow-lg scale-105' 
-                      : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:bg-slate-700'
-                    }`}
-                  >
-                    <span className="text-xl lg:text-2xl">{recipe.icon}</span>
-                    <div className="text-center sm:text-left">
-                      <div className="text-[8px] opacity-70 hidden lg:block uppercase">Scenario</div>
-                      <div className="text-[10px] lg:text-sm whitespace-nowrap">{recipe.name.split(' (')[0]}</div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-            <button
+        {/* Live Simulation */}
+        <section id="simulation" className="scroll-mt-24 space-y-8">
+          <div className="glass p-6 sm:p-8 rounded-[2rem] border border-white/5 flex flex-col lg:flex-row gap-6 items-center shadow-2xl">
+             <div className="flex-1 w-full space-y-4">
+                <div className="flex items-center gap-2 text-emerald-400 font-black text-xs uppercase tracking-widest">
+                   <span className="w-8 h-px bg-emerald-500/30"></span> Simulation Scenarios
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {RECIPES.map(recipe => (
+                    <button
+                      key={recipe.id}
+                      onClick={() => { setSelectedRecipe(recipe); setIsSimulating(false); }}
+                      className={`group p-3 sm:p-4 rounded-2xl transition-all border flex flex-col items-center gap-2 ${
+                        selectedRecipe.id === recipe.id 
+                        ? 'bg-emerald-500 border-emerald-400 text-white shadow-glow-emerald scale-105' 
+                        : 'bg-white/5 border-white/5 text-slate-500 hover:border-white/20'
+                      }`}
+                    >
+                      <span className="text-xl sm:text-2xl group-hover:scale-110 transition-transform">{recipe.icon}</span>
+                      <span className="text-[10px] sm:text-[11px] font-black whitespace-nowrap">{recipe.name.split(' (')[0]}</span>
+                    </button>
+                  ))}
+                </div>
+             </div>
+             <button
               onClick={() => setIsSimulating(!isSimulating)}
-              className={`w-full lg:w-auto px-10 py-4 lg:py-5 rounded-2xl font-black text-base lg:text-lg transition-all transform hover:scale-105 active:scale-95 shadow-xl ${
+              className={`w-full lg:w-64 h-16 sm:h-24 rounded-2xl font-black text-lg sm:text-xl transition-all shadow-xl flex items-center justify-center gap-3 ${
                 isSimulating 
-                ? 'bg-red-500 text-white' 
-                : 'bg-emerald-500 text-white shadow-emerald-500/20'
+                ? 'bg-red-500 text-white hover:bg-red-600' 
+                : 'bg-emerald-500 text-white hover:bg-emerald-400 shadow-glow-emerald'
               }`}
             >
-              <i className={`fas ${isSimulating ? 'fa-stop' : 'fa-play'} mr-2`}></i>
-              {isSimulating ? 'STOP' : 'START SIMULATION'}
+              <i className={`fas ${isSimulating ? 'fa-square' : 'fa-play'}`}></i>
+              {isSimulating ? 'STOP' : 'RUN TEST'}
             </button>
           </div>
 
@@ -85,50 +81,42 @@ const App: React.FC = () => {
           />
         </section>
 
-        {/* Feature Comparison Table */}
-        <section id="comparison" className="space-y-6 lg:space-y-8 scroll-mt-24 px-2 lg:px-0">
-          <div className="flex items-center gap-4">
-            <h3 className="text-xl lg:text-3xl font-bold">에너지 효율 및 기술 상세 비교</h3>
-            <div className="h-px flex-1 bg-gradient-to-r from-slate-700 to-transparent"></div>
-          </div>
-          <ComparisonTable />
+        {/* Feature Table */}
+        <section id="comparison" className="scroll-mt-24 space-y-8">
+           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+              <h3 className="text-2xl sm:text-4xl font-black tracking-tight">Technical Benchmarks</h3>
+              <p className="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-widest">2026 Premium Lineup Comparison</p>
+           </div>
+           <ComparisonTable />
         </section>
 
-        {/* Autonomous Exclusive Section */}
-        <section className="space-y-8 pb-10 px-2 lg:px-0">
-          <div className="flex items-center gap-4">
-            <h3 className="text-xl lg:text-3xl font-bold text-emerald-400">AI-Induction 독점 기술</h3>
-            <div className="h-px flex-1 bg-gradient-to-r from-emerald-500/30 to-transparent"></div>
+        {/* Exclusive Features */}
+        <section className="pb-20 space-y-12">
+          <div className="text-center space-y-2">
+            <h3 className="text-2xl sm:text-4xl font-black">AI-Induction 독점 기술</h3>
+            <p className="text-slate-500 text-sm">기존 대기업 제품으로는 불가능한 기능들</p>
           </div>
           <AutonomousPanel />
         </section>
       </main>
 
-      {/* Mobile-Friendly CTA Footer */}
-      <footer className="fixed bottom-0 left-0 right-0 glass border-t border-white/5 py-3 lg:py-4 z-50">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2 lg:gap-0">
-          <div className="hidden lg:flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-            <span className="text-emerald-400 font-bold tracking-tight">AI-Induction Live Vision</span> 
-          </div>
-          <div className="flex gap-2 lg:gap-4 w-full sm:w-auto">
+      {/* Quick Action Footer */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md">
+         <div className="glass p-2 rounded-2xl border border-white/10 shadow-2xl flex gap-2">
             <button 
-              onClick={openVercelLink}
-              className="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white px-4 lg:px-8 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-bold transition-all flex items-center justify-center gap-2"
+              onClick={() => window.open('https://ai-induction.vercel.app/', '_blank')}
+              className="flex-1 bg-white/5 hover:bg-white/10 text-white py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
             >
-              <i className="fas fa-external-link-alt"></i>
-              <span className="hidden sm:inline">Official Site</span>
-              <span className="sm:hidden">공식 사이트</span>
+              Official
             </button>
             <button 
               onClick={() => scrollToSection('simulation')}
-              className="flex-1 sm:flex-none bg-emerald-500 hover:bg-emerald-600 text-white px-4 lg:px-8 py-2.5 lg:py-3 rounded-xl text-xs lg:text-sm font-bold transition-all shadow-lg"
+              className="flex-[2] bg-emerald-500 hover:bg-emerald-400 text-white py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-glow-emerald"
             >
-              Quick Sim
+              Live Demo
             </button>
-          </div>
-        </div>
-      </footer>
+         </div>
+      </div>
     </div>
   );
 };

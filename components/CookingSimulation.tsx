@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Brand, Recipe, CookingState } from '../types';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
 interface Props {
   recipe: Recipe;
@@ -12,9 +12,9 @@ interface Props {
 const CookingSimulation: React.FC<Props> = ({ recipe, isActive, onComplete }) => {
   const [time, setTime] = useState(0);
   const [states, setStates] = useState<Record<Brand, CookingState>>({
-    [Brand.AI_INDUCTION]: { time: 0, vesselTemp: 25, sensorTemp: 25, powerLevel: 10, status: '가열 시작', isBoilingOver: false, energyConsumed: 0 },
-    [Brand.SAMSUNG]: { time: 0, vesselTemp: 25, sensorTemp: 25, powerLevel: 0, status: '대기', isBoilingOver: false, energyConsumed: 0 },
-    [Brand.LG]: { time: 0, vesselTemp: 25, sensorTemp: 25, powerLevel: 0, status: '대기', isBoilingOver: false, energyConsumed: 0 },
+    [Brand.AI_INDUCTION]: { time: 0, vesselTemp: 25, sensorTemp: 25, powerLevel: 0, status: '가열 전', isBoilingOver: false, energyConsumed: 0 },
+    [Brand.SAMSUNG]: { time: 0, vesselTemp: 25, sensorTemp: 25, powerLevel: 0, status: '가열 전', isBoilingOver: false, energyConsumed: 0 },
+    [Brand.LG]: { time: 0, vesselTemp: 25, sensorTemp: 25, powerLevel: 0, status: '가열 전', isBoilingOver: false, energyConsumed: 0 },
   });
   
   const [history, setHistory] = useState<any[]>([]);
@@ -30,7 +30,7 @@ const CookingSimulation: React.FC<Props> = ({ recipe, isActive, onComplete }) =>
       setTime(0);
       setHistory([]);
       setStates({
-        [Brand.AI_INDUCTION]: { time: 0, vesselTemp: 25, sensorTemp: 25, powerLevel: 10, status: '대기', isBoilingOver: false, energyConsumed: 0 },
+        [Brand.AI_INDUCTION]: { time: 0, vesselTemp: 25, sensorTemp: 25, powerLevel: 0, status: '대기', isBoilingOver: false, energyConsumed: 0 },
         [Brand.SAMSUNG]: { time: 0, vesselTemp: 25, sensorTemp: 25, powerLevel: 0, status: '대기', isBoilingOver: false, energyConsumed: 0 },
         [Brand.LG]: { time: 0, vesselTemp: 25, sensorTemp: 25, powerLevel: 0, status: '대기', isBoilingOver: false, energyConsumed: 0 },
       });
@@ -49,171 +49,126 @@ const CookingSimulation: React.FC<Props> = ({ recipe, isActive, onComplete }) =>
         const s = next[brand];
         const isAI = brand === Brand.AI_INDUCTION;
         
-        // --- Scenario Logic ---
         if (recipe.id === 'seaweed-soup') {
           if (!isAI) {
             s.powerLevel = 0;
-            s.status = "예약 기능 미지원 (안전 제한)";
+            s.status = "예약 기능 미지원";
             s.vesselTemp = 25;
-            s.energyConsumed = 0;
           } else {
-            if (time < 30) {
-              s.powerLevel = 0;
-              s.status = "07:00 예약 대기 중...";
-            } else if (time >= 30 && time < 80) {
-              s.powerLevel = 10;
-              s.vesselTemp += 2.5;
-              s.status = "자율 조리 가동 중";
-              s.energyConsumed += (s.powerLevel * 0.012);
-            } else {
-              s.powerLevel = 2;
-              s.vesselTemp = 99;
-              s.status = "정밀 심머링 (보온/맛내기)";
-              s.energyConsumed += (s.powerLevel * 0.012);
-            }
+            if (time < 30) { s.powerLevel = 0; s.status = "07:00 예약 대기"; }
+            else if (time < 80) { s.powerLevel = 10; s.vesselTemp += 2.8; s.status = "자율 가열 중"; }
+            else { s.powerLevel = 2; s.vesselTemp = 99; s.status = "심머링 유지"; }
+            s.energyConsumed += (s.powerLevel * 0.012);
             s.sensorTemp = s.vesselTemp;
           }
         } 
         else if (recipe.id === 'fried-fish') {
-          const efficiencyFactor = isAI ? 0.012 : 0.028; // Competition wastes more during oscillation
-          s.energyConsumed += (s.powerLevel * efficiencyFactor);
-
-          if (time < 50) { // Preheat Phase
-            if (s.vesselTemp < 180) s.vesselTemp += 4.5;
-            else s.vesselTemp = 180 + (Math.random() - 0.5); // Hold 180
-            s.status = "기름 예열 중 (Target: 180°C)";
-          } else if (time >= 50 && time < 55) { // Fish Insertion
-            s.vesselTemp -= 55; // Sudden drop
-            s.status = "생선 투입 (온도 급락!)";
-          } else { // Frying Phase
+          if (time < 50) { // 예열
+            if (s.vesselTemp < 180) { s.powerLevel = 10; s.vesselTemp += 5; }
+            else { s.powerLevel = isAI ? 3 : 0; s.vesselTemp = 180 + (Math.random()*2 - 1); }
+            s.status = "기름 예열 중 (180°C)";
+          } else if (time < 55) { // 투입
+            s.vesselTemp -= 60;
+            s.status = "냉동 생선 투입!";
+          } else { // 튀김 중
             if (isAI) {
-              // AI-Induction: Fast recovery & rock-solid 180
-              if (s.vesselTemp < 180) {
-                s.powerLevel = 10;
-                s.vesselTemp += 6.5;
-              } else {
-                s.powerLevel = 3.5;
-                s.vesselTemp = 180 + (Math.random() * 0.4 - 0.2);
-              }
-              s.status = "180°C 정밀 유지 (바삭함 최적화)";
+              if (s.vesselTemp < 180) { s.powerLevel = 10; s.vesselTemp += 8; }
+              else { s.powerLevel = 3.5; s.vesselTemp = 180 + (Math.random()*0.6 - 0.3); }
+              s.status = "180°C 칼유지 (바삭함)";
             } else {
-              // Competition: Blind AI sensing lag + poor PID control
-              // Lag causes late power boost and massive overshoot
-              const sensingLag = brand === Brand.SAMSUNG ? 15 : 10;
-              if (time < 50 + sensingLag) {
-                s.powerLevel = 2; // Still hasn't realized the temp dropped
-                s.vesselTemp += 0.5;
-                s.status = "인지 지연 중 (눅눅함 발생)";
+              const lag = brand === Brand.SAMSUNG ? 18 : 12;
+              if (time < 55 + lag) {
+                s.powerLevel = 1; // 온도 떨어진 걸 아직 모름
+                s.vesselTemp += 0.4;
+                s.status = "인지 지연 (눅눅함 진행)";
               } else {
-                s.powerLevel = 10; // Late reaction -> Full power
-                s.vesselTemp += 7.0;
+                s.powerLevel = 10; // 뒤늦게 풀가열
+                s.vesselTemp += 7.5;
                 if (s.vesselTemp > 195) {
-                   s.status = "오버슈트 발생! (기름 과열)";
+                   s.status = "과열! 오버슈트 발생";
+                   s.powerLevel = 0;
                 } else {
-                   s.status = "지연 보상 가열 중";
+                   s.status = "지연 추격 가열 중";
                 }
               }
-              // Oscillation simulation for competition after recovery
-              if (s.vesselTemp > 185) s.powerLevel = 0; 
             }
           }
-          
+          s.energyConsumed += (s.powerLevel * (isAI ? 0.012 : 0.028));
           if (isAI) s.sensorTemp = s.vesselTemp;
-          else s.sensorTemp = s.sensorTemp + (s.vesselTemp - s.sensorTemp) * 0.05; // High lag for competition
+          else s.sensorTemp = s.sensorTemp + (s.vesselTemp - s.sensorTemp) * 0.04;
         }
-        else {
-          // Ramen & Steak Logic
-          const efficiencyFactor = isAI ? 0.012 : 0.025; 
-          s.energyConsumed += (s.powerLevel * efficiencyFactor);
-
-          if (recipe.id === 'ramen') {
-            s.vesselTemp += 2.5;
-            if (s.vesselTemp > 95) {
-              if (isAI) { s.powerLevel = 2; s.status = "넘침 선제 차단"; s.vesselTemp = 99.5; }
-              else { s.vesselTemp += 1.8; if (s.vesselTemp >= 105) { s.isBoilingOver = true; s.status = "넘침 발생"; } }
-            }
-          } else if (recipe.id === 'steak') {
-            if (time < 50) { s.vesselTemp += 4.0; s.status = "고온 예열"; }
-            else if (time >= 50 && time < 55) { s.vesselTemp -= 50; s.status = "고기 투입"; }
-            else {
-              if (isAI) { s.powerLevel = 10; s.vesselTemp += 5.2; s.status = "시어링 최적화"; }
-              else { s.powerLevel = 7; s.vesselTemp += 2.8; s.status = "간접 추정 가열"; }
-            }
+        else { // 기본 로직
+          s.vesselTemp += (isAI ? 2.5 : 2.2);
+          if (s.vesselTemp > 95) {
+            if (isAI) { s.vesselTemp = 99.5; s.powerLevel = 2; s.status = "넘침 예측 제어"; }
+            else { s.vesselTemp += 1.5; if (s.vesselTemp > 105) s.isBoilingOver = true; s.status = "넘침 임계점"; }
           }
-
-          if (isAI) { s.sensorTemp = s.vesselTemp; } 
-          else {
-            const target = s.vesselTemp;
-            s.sensorTemp = s.sensorTemp + (target - s.sensorTemp) * 0.08;
-          }
+          s.energyConsumed += (s.powerLevel * (isAI ? 0.012 : 0.025));
+          if (isAI) s.sensorTemp = s.vesselTemp;
+          else s.sensorTemp = s.sensorTemp + (s.vesselTemp - s.sensorTemp) * 0.07;
         }
       });
 
-      setHistory(hPrev => [
-        ...hPrev, 
-        { 
-          time, 
-          ai: Math.round(next[Brand.AI_INDUCTION].vesselTemp), 
-          samsung: Math.round(next[Brand.SAMSUNG].vesselTemp),
-          lg: Math.round(next[Brand.LG].vesselTemp)
-        }
-      ].slice(-100));
+      setHistory(hPrev => [...hPrev, { 
+        time, 
+        ai: Math.round(next[Brand.AI_INDUCTION].vesselTemp), 
+        samsung: Math.round(next[Brand.SAMSUNG].vesselTemp),
+        lg: Math.round(next[Brand.LG].vesselTemp)
+      }].slice(-100));
       return next;
     });
   }, [time, isActive]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
       <div className="lg:col-span-2 space-y-6">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {Object.values(Brand).map(brand => (
-            <div key={brand} className={`relative p-5 lg:p-6 rounded-3xl glass border-t-8 transition-all ${
-              brand === Brand.AI_INDUCTION ? 'border-emerald-500 bg-emerald-500/10 shadow-2xl' : 'border-slate-800 opacity-90'
+            <div key={brand} className={`relative p-5 rounded-3xl glass border-t-4 transition-all overflow-hidden ${
+              brand === Brand.AI_INDUCTION ? 'border-emerald-500 bg-emerald-500/5' : 'border-slate-800'
             }`}>
-              <div className="flex justify-between items-start mb-4">
-                <div className="text-[10px] font-black text-slate-500 uppercase">{brand.split(' ')[0]}</div>
-                <div className="flex flex-col items-end">
-                   {brand !== Brand.AI_INDUCTION ? (
-                      <span className="bg-red-500/10 text-red-500 text-[8px] px-2 py-0.5 rounded font-black mb-1">BLIND SENSING</span>
-                   ) : (
-                      <span className="bg-emerald-500 text-white text-[8px] px-2 py-0.5 rounded font-black mb-1 shadow-glow">GROUND TRUTH</span>
-                   )}
-                   <span className="text-[9px] text-slate-400 font-mono">⚡ {states[brand].energyConsumed.toFixed(3)} kWh</span>
-                </div>
-              </div>
+              {brand === Brand.AI_INDUCTION && <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 blur-3xl -z-10"></div>}
               
-              <div className="h-32 lg:h-40 bg-slate-950/80 rounded-2xl relative flex items-center justify-center overflow-hidden">
-                 {recipe.id === 'seaweed-soup' && brand !== Brand.AI_INDUCTION && (
-                   <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-red-950/60 backdrop-blur-sm p-4 text-center">
-                      <i className="fas fa-lock text-red-500 text-xl mb-2"></i>
-                      <span className="text-[9px] text-white font-bold leading-tight uppercase tracking-tighter">Safety Block:<br/>No Remote Access</span>
-                   </div>
-                 )}
-                 <div className={`w-20 h-20 lg:w-24 lg:h-24 bg-slate-500 rounded-t-xl relative z-10 ${states[brand].isBoilingOver ? 'boil-animation' : ''}`}>
-                    <div className={`absolute bottom-0 w-full transition-all duration-300 ${recipe.id === 'fried-fish' || recipe.id === 'steak' ? 'bg-orange-600' : 'bg-emerald-600/40'}`} 
-                         style={{height: `${Math.min(states[brand].vesselTemp/2.5, 98)}%`}}></div>
-                    {brand === Brand.AI_INDUCTION && (
-                      <div className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-emerald-500/20 rounded-full flex items-center justify-center">
-                         <i className="fas fa-eye text-emerald-400 text-[10px] animate-pulse"></i>
-                      </div>
-                    )}
-                 </div>
-                 {/* Fire Visual */}
-                 <div className={`absolute bottom-0 w-full h-12 bg-gradient-to-t from-orange-600/40 to-transparent transition-opacity duration-300 ${states[brand].powerLevel > 5 ? 'opacity-100' : 'opacity-0'}`}></div>
+              <div className="flex justify-between items-start mb-4">
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">{brand.split(' ')[0]} 2026 Model</span>
+                <span className={`text-[8px] px-2 py-0.5 rounded font-black ${brand === Brand.AI_INDUCTION ? 'bg-emerald-500 text-white shadow-glow-emerald' : 'bg-red-500/20 text-red-500'}`}>
+                  {brand === Brand.AI_INDUCTION ? 'VISION AI' : 'BLIND AI'}
+                </span>
               </div>
 
-              <div className="mt-4 space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-[10px] text-slate-500 font-bold uppercase">Real Temperature</span>
-                  <span className={`text-base lg:text-lg font-black ${brand === Brand.AI_INDUCTION ? 'text-white' : 'text-slate-300'}`}>{Math.round(states[brand].vesselTemp)}°C</span>
+              <div className="h-32 bg-black/40 rounded-2xl relative flex items-center justify-center border border-white/5 mb-4">
+                {recipe.id === 'seaweed-soup' && brand !== Brand.AI_INDUCTION && (
+                   <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-red-950/80 backdrop-blur-md p-4">
+                      <i className="fas fa-lock text-red-500 mb-1"></i>
+                      <span className="text-[9px] text-white font-black leading-none uppercase">Safety Restricted</span>
+                   </div>
+                )}
+                <div className={`w-16 h-16 sm:w-20 sm:h-20 bg-slate-700 rounded-t-xl relative z-10 overflow-hidden shadow-lg ${states[brand].isBoilingOver ? 'boil-animation' : ''}`}>
+                   <div className={`absolute bottom-0 w-full transition-all duration-300 ${recipe.id === 'fried-fish' ? 'bg-orange-500' : 'bg-emerald-400/30'}`} 
+                        style={{height: `${Math.min(states[brand].vesselTemp/2.5, 98)}%`}}></div>
                 </div>
+                {/* Heat Waves */}
+                {states[brand].powerLevel > 0 && (
+                   <div className="absolute bottom-4 flex gap-1 animate-pulse">
+                      <div className="w-1 h-6 bg-orange-500/40 rounded-full"></div>
+                      <div className="w-1 h-10 bg-orange-500/60 rounded-full"></div>
+                      <div className="w-1 h-6 bg-orange-500/40 rounded-full"></div>
+                   </div>
+                )}
+              </div>
+
+              <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-[10px] text-slate-500 font-bold uppercase">AI Prediction</span>
-                  <span className={`text-xs lg:text-sm font-bold ${brand === Brand.AI_INDUCTION ? 'text-emerald-400' : 'text-orange-500/70'}`}>
-                    {brand === Brand.AI_INDUCTION ? Math.round(states[brand].sensorTemp) + "°C" : (recipe.id === 'seaweed-soup' ? "N/A" : Math.round(states[brand].sensorTemp) + "°C (Lag)")}
-                  </span>
+                  <span className="text-[10px] text-slate-500 font-bold uppercase">Actual Temp</span>
+                  <span className={`text-xl font-black ${brand === Brand.AI_INDUCTION ? 'text-white' : 'text-slate-400'}`}>{Math.round(states[brand].vesselTemp)}°C</span>
                 </div>
-                <div className={`text-[10px] p-2 rounded-lg font-bold text-center h-8 flex items-center justify-center ${states[brand].isBoilingOver ? 'bg-red-500/20 text-red-500' : brand !== Brand.AI_INDUCTION && recipe.id === 'seaweed-soup' ? 'bg-slate-800 text-slate-500' : 'bg-slate-900 text-slate-400'}`}>
+                <div className="flex justify-between items-center border-t border-white/5 pt-2">
+                  <span className="text-[10px] text-slate-500 font-bold uppercase">Efficiency</span>
+                  <span className="text-[10px] text-emerald-400 font-mono">⚡ {states[brand].energyConsumed.toFixed(4)} kWh</span>
+                </div>
+                <div className={`text-[10px] py-1.5 rounded-lg font-black text-center uppercase tracking-tighter ${
+                  states[brand].isBoilingOver ? 'bg-red-500 text-white' : 'bg-slate-900 text-slate-400'
+                }`}>
                   {states[brand].status}
                 </div>
               </div>
@@ -221,77 +176,63 @@ const CookingSimulation: React.FC<Props> = ({ recipe, isActive, onComplete }) =>
           ))}
         </div>
 
-        {/* Graph Area */}
-        <div className="h-56 lg:h-72 glass p-4 lg:p-6 rounded-3xl border border-white/5 relative overflow-hidden">
-          <div className="absolute top-4 left-6 flex items-center gap-4 z-10">
-             <div className="flex items-center gap-1.5"><div className="w-3 h-3 bg-emerald-500 rounded-full"></div><span className="text-[10px] font-bold text-slate-400">AI-Induction</span></div>
-             <div className="flex items-center gap-1.5"><div className="w-3 h-3 bg-blue-500 rounded-full"></div><span className="text-[10px] font-bold text-slate-400 italic">Samsung (Blind)</span></div>
-             <div className="flex items-center gap-1.5"><div className="w-3 h-3 bg-purple-500 rounded-full"></div><span className="text-[10px] font-bold text-slate-400 italic">LG (Blind)</span></div>
+        <div className="h-64 sm:h-80 glass p-4 sm:p-6 rounded-3xl border border-white/5 relative">
+          <div className="absolute top-4 left-6 flex items-center gap-4 z-10 text-[10px] font-black uppercase">
+             <div className="flex items-center gap-1.5"><div className="w-3 h-1 bg-emerald-500 rounded-full"></div><span>AI-Induction</span></div>
+             <div className="flex items-center gap-1.5 text-slate-500"><div className="w-3 h-1 bg-blue-500/50 rounded-full"></div><span>Samsung</span></div>
+             <div className="flex items-center gap-1.5 text-slate-500"><div className="w-3 h-1 bg-purple-500/50 rounded-full"></div><span>LG</span></div>
           </div>
+          {recipe.id === 'fried-fish' && (
+             <div className="absolute top-1/2 left-6 -translate-y-1/2 text-white/5 font-black text-6xl italic pointer-events-none select-none">180°C TARGET</div>
+          )}
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={history}>
-              <CartesianGrid strokeDasharray="2 2" stroke="#334155" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
               <XAxis dataKey="time" hide />
-              <YAxis domain={recipe.id.includes('fried') || recipe.id === 'steak' ? [20, 240] : [20, 130]} hide />
-              <Tooltip 
-                contentStyle={{ background: '#0f172a', border: 'none', borderRadius: '12px', fontSize: '10px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.5)' }} 
-                itemStyle={{ fontWeight: 'bold' }}
-              />
+              <YAxis domain={recipe.id === 'fried-fish' ? [20, 220] : [20, 120]} hide />
+              <Tooltip contentStyle={{ background: '#020617', border: 'none', borderRadius: '12px', fontSize: '10px' }} />
+              <ReferenceLine y={recipe.id === 'fried-fish' ? 180 : 100} stroke="#475569" strokeDasharray="3 3" />
               <Line type="monotone" dataKey="ai" stroke="#10b981" strokeWidth={5} dot={false} isAnimationActive={false} />
-              <Line type="monotone" dataKey="samsung" stroke="#3b82f6" strokeWidth={2} strokeDasharray="6 3" dot={false} isAnimationActive={false} />
-              <Line type="monotone" dataKey="lg" stroke="#a855f7" strokeWidth={2} strokeDasharray="6 3" dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey="samsung" stroke="#3b82f6" strokeWidth={1} strokeDasharray="5 5" dot={false} isAnimationActive={false} opacity={0.5} />
+              <Line type="monotone" dataKey="lg" stroke="#a855f7" strokeWidth={1} strokeDasharray="5 5" dot={false} isAnimationActive={false} opacity={0.5} />
             </LineChart>
           </ResponsiveContainer>
-          {recipe.id === 'fried-fish' && (
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-10">
-               <i className="fas fa-chart-line text-8xl text-white"></i>
-            </div>
-          )}
         </div>
       </div>
 
-      <div className="glass p-6 rounded-3xl flex flex-col border border-white/5 h-full overflow-hidden">
-        <h4 className="text-emerald-400 font-black mb-4 flex items-center gap-2 uppercase tracking-widest text-sm">
-           <i className="fas fa-eye"></i> Ground Truth Analysis
+      <div className="glass p-6 rounded-3xl flex flex-col border border-white/5 h-full max-h-[600px]">
+        <h4 className="text-emerald-400 font-black mb-6 flex items-center gap-2 uppercase tracking-widest text-xs">
+           <i className="fas fa-eye animate-pulse"></i> Ground Truth Analysis
         </h4>
-        <div className="flex-1 space-y-4 overflow-y-auto text-[11px] font-mono custom-scrollbar pr-2 mb-6">
+        <div className="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar text-[11px] font-mono leading-relaxed">
           <div className="p-3 bg-slate-900/80 rounded-xl border-l-4 border-emerald-500">
-             <span className="text-emerald-400 font-bold">[CORE DIFF]</span> <b>센서 위치가 품질을 결정합니다.</b><br/>
-             삼성/LG의 'Blind' 센서는 유리 상판 가열 후 2차적으로 온도를 추측합니다. 특히 튀김처럼 온도가 급변하는 조리에서 치명적인 오차가 발생합니다.
+             <span className="text-emerald-400 font-bold">[CONCEPT]</span> <b>장님 AI vs 뜬 눈 AI</b><br/>
+             기존 삼성/LG는 유리 상판을 통해 간접적으로 온도를 추측합니다. 이는 안대로 눈을 가리고 조리하는 것과 같습니다.
           </div>
           {isActive && (
             <>
               {recipe.id === 'fried-fish' && (
                 <div className="p-3 bg-blue-500/10 rounded-xl border-l-4 border-blue-500">
-                  <span className="text-blue-400 font-bold">[SENSING]</span> <b>냉동 생선 투입 감지</b><br/>
-                  AI-Induction은 용기 바닥 온도 하락을 0.05초 내에 감지하여 즉각 보상 가열합니다. 경쟁사는 10초 이상 지연되어 기름이 식고 눅눅해집니다.
+                  <span className="text-blue-400 font-bold">[SENSING]</span> <b>냉동 부하 변동 감지</b><br/>
+                  생선 투입 시 온도가 60도 급락했습니다. AI-Induction은 0.1초 만에 이를 감지해 가열을 시작하지만, 경쟁사는 유리가 식을 때까지 감지하지 못해 기름이 식어버립니다(눅눅함의 원인).
                 </div>
               )}
               {recipe.id === 'fried-fish' && time > 80 && (
-                <div className="p-3 bg-red-500/10 rounded-xl border-l-4 border-red-500">
-                  <span className="text-red-400 font-bold">[CRITICAL]</span> <b>오버슈트 경고</b><br/>
-                  Blind AI가 뒤늦게 가열을 시작하여 195°C 이상으로 오버슈트하고 있습니다. 튀김 옷이 타고 발암 물질이 형성될 수 있는 위험 구간입니다.
+                <div className="p-3 bg-red-500/10 rounded-xl border-l-4 border-red-500 animate-pulse">
+                  <span className="text-red-400 font-bold">[WARNING]</span> <b>경쟁사 오버슈트 감지</b><br/>
+                  Blind AI가 뒤늦게 가열을 시작해 목표치인 180도를 뚫고 200도 가까이 치솟고 있습니다. 발암물질(벤조피렌) 위험 구간입니다.
                 </div>
               )}
-              <div className="p-3 bg-orange-500/10 rounded-xl border-l-4 border-orange-500">
-                <span className="text-orange-400 font-bold">[ECONOMY]</span> <b>불필요한 에너지 소모</b><br/>
-                정밀 제어가 안 되는 경쟁사 모델은 온도를 맞추기 위해 잦은 과가열을 반복하며 AI-Induction 대비 30% 더 많은 전기를 씁니다.
+              <div className="p-3 bg-emerald-500/10 rounded-xl border-l-4 border-emerald-500">
+                <span className="text-emerald-400 font-bold">[EFFICIENCY]</span> <b>전력 낭비 차단</b><br/>
+                정밀 제어로 불필요한 고화력을 쓰지 않아 전력 효율이 경쟁사 대비 약 28% 높게 기록되고 있습니다.
               </div>
             </>
           )}
         </div>
-        <div className="bg-emerald-500/20 p-4 rounded-2xl border border-emerald-500/30">
-           <div className="text-[10px] font-black text-emerald-400 mb-2 uppercase">Vision AI Comparison</div>
-           <div className="grid grid-cols-2 gap-2 text-[9px] text-slate-300">
-              <div className="flex flex-col">
-                 <span className="text-slate-500">Stability (Fried Fish)</span>
-                 <span className="font-bold text-emerald-400">99.9% (Steady 180°C)</span>
-              </div>
-              <div className="flex flex-col">
-                 <span className="text-slate-500">Competition Stability</span>
-                 <span className="font-bold text-red-400">Low (±15°C Volatile)</span>
-              </div>
-           </div>
+        <div className="mt-6 bg-gradient-to-br from-emerald-500 to-blue-600 p-4 rounded-2xl shadow-glow-emerald">
+           <div className="text-[10px] font-black text-white/90 mb-1 uppercase tracking-widest">Vision Advantage</div>
+           <div className="text-lg font-black text-white italic">NO MORE GUESSING.</div>
         </div>
       </div>
     </div>
