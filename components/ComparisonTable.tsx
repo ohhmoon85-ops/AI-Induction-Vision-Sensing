@@ -2,65 +2,88 @@
 import React from 'react';
 
 const ComparisonTable: React.FC = () => {
-  const data = [
+  const comparisonData = [
     {
-      feature: "핵심 센싱 메커니즘",
-      ai: "Vision Sensing (직접 접촉 - 눈을 뜸)",
-      others: "Blind Sensing (추정/간접 - 눈을 감음)",
-      impact: "지연 없는 실시간 데이터 확보"
+      category: "핵심 센서",
+      samsungLg: "상판 하부 접촉식 / 외부 무선 프로브",
+      smartCooking: "비접촉(IR) + 접촉식 다각도 배치",
+      patentTech: "열원 외부 오프셋 직접 접촉 센서",
+      highlight: true
     },
     {
-      feature: "튀김 온도 유지 (180°C)",
-      ai: "오차 ±1°C 내 철저 유지 (바삭함)",
-      others: "오차 ±15°C 이상 발생 (눅눅함/타버림)",
-      impact: "튀김 조리의 성패를 가르는 정밀도"
+      category: "조리 자동화",
+      samsungLg: "수동 출력/시간 조절 중심 (레시피 스캔)",
+      smartCooking: "생성형 AI 모델의 조리 형태 스스로 인지",
+      patentTech: "센서 기반 화력 및 목표 온도 직접 제어",
+      highlight: false
     },
     {
-      feature: "자율 예약/원격 조리",
-      ai: "완전 지원 (상태 확신 기반 안전 확보)",
-      others: "지원 불가 (화재 위험 및 규제 제한)",
-      impact: "아침 식사 자동화 등 라이프스타일 혁명"
+      category: "용기 인식",
+      samsungLg: "용기 유무 및 대략적 크기 인식",
+      smartCooking: "정밀 위치, 크기, 재질, 형상 자동 식별",
+      patentTech: "바닥 평탄도 상관없이 밀착 감지",
+      highlight: false
     },
     {
-      feature: "에너지 효율 (Efficiency)",
-      ai: "최적 화력 유지로 전력 25% 절감",
-      others: "오버슈팅 및 잦은 재가열로 전력 낭비",
-      impact: "누적 전기료 및 탄소 배출량의 결정적 차이"
+      category: "돌발 상황 대응",
+      samsungLg: "과열 시 전원 차단 (사후 대응)",
+      smartCooking: "외란 패턴(넘침, 오염) 실시간 AI 분석",
+      patentTech: "95°C부터 화력 조절로 넘침 사전 방지",
+      highlight: true
     },
     {
-      feature: "반응 속도 (Latency)",
-      ai: "0.1초 미만 (Interrupt 방식)",
-      others: "3초 ~ 7초 (Inference 방식)",
-      impact: "튀김/스테이크 조리 품질의 극명한 차이"
+      category: "하드웨어 특징",
+      samsungLg: "일체형 상판 / 일반 워킹코일",
+      smartCooking: "생성형 제어 모델 / 실시간 맞춤 조리",
+      patentTech: "분리 상판(원가 절감) / PCB 적층 코일",
+      highlight: false
     }
   ];
 
   return (
-    <div className="overflow-x-auto rounded-3xl glass border border-white/5 shadow-2xl">
-      <table className="min-w-full divide-y divide-slate-800">
-        <thead className="bg-slate-900/80">
-          <tr>
-            <th className="px-4 lg:px-6 py-5 text-left text-[10px] font-black text-slate-500 uppercase tracking-widest">구분</th>
-            <th className="px-4 lg:px-6 py-5 text-left text-[10px] font-black text-emerald-400 uppercase tracking-widest bg-emerald-500/5">AI-Induction</th>
-            <th className="px-4 lg:px-6 py-5 text-left text-[10px] font-black text-slate-500 uppercase tracking-widest italic">기존 대기업 (Blind)</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-800/50 bg-slate-900/30">
-          {data.map((row, idx) => (
-            <tr key={idx} className="hover:bg-white/5 transition-colors">
-              <td className="px-4 lg:px-6 py-4 text-xs font-bold text-slate-300">{row.feature}</td>
-              <td className="px-4 lg:px-6 py-4 text-xs font-extrabold text-white bg-emerald-500/5">
-                <i className="fas fa-check-circle text-emerald-400 mr-2"></i> {row.ai}
-              </td>
-              <td className="px-4 lg:px-6 py-4 text-xs text-slate-500 italic">
-                {row.others.includes("지원 불가") || row.others.includes("±15°C") ? (
-                  <span className="text-red-400/70"><i className="fas fa-times-circle mr-1"></i> {row.others}</span>
-                ) : row.others}
-              </td>
+    <div className="space-y-6">
+      <div className="overflow-x-auto rounded-[2.5rem] glass border border-white/5 shadow-3xl">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-slate-900/50 border-b border-white/10">
+              <th className="p-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">비교 항목</th>
+              <th className="p-6 text-[10px] font-black text-blue-400 uppercase tracking-widest">삼성 / LG (기성 제품)</th>
+              <th className="p-6 text-[10px] font-black text-emerald-400 uppercase tracking-widest">AI-Induction (스마트 쿠킹)</th>
+              <th className="p-6 text-[10px] font-black text-amber-400 uppercase tracking-widest">AI-Induction (특허 기술)</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-white/5">
+            {comparisonData.map((row, idx) => (
+              <tr key={idx} className={`group transition-colors ${row.highlight ? 'bg-emerald-500/5' : 'hover:bg-white/5'}`}>
+                <td className="p-6 text-xs font-bold text-slate-400">{row.category}</td>
+                <td className="p-6 text-[11px] text-slate-500 italic">{row.samsungLg}</td>
+                <td className="p-6 text-[11px] text-emerald-100 font-medium">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></div>
+                    {row.smartCooking}
+                  </div>
+                </td>
+                <td className="p-6 text-[11px] text-amber-100 font-medium">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></div>
+                    {row.patentTech}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex flex-col md:flex-row gap-4 justify-center">
+        <div className="glass px-6 py-3 rounded-2xl border border-emerald-500/20 flex items-center gap-3">
+          <span className="text-[10px] font-black text-emerald-400 uppercase">AI-Logic</span>
+          <span className="text-xs text-slate-400">실시간 생성형 제어 모델로 조리 상황별 맞춤 대응</span>
+        </div>
+        <div className="glass px-6 py-3 rounded-2xl border border-amber-500/20 flex items-center gap-3">
+          <span className="text-[10px] font-black text-amber-400 uppercase">Patent-08883</span>
+          <span className="text-xs text-slate-400">오프셋 센서 배치로 온도 측정 정확도 극대화</span>
+        </div>
+      </div>
     </div>
   );
 };
