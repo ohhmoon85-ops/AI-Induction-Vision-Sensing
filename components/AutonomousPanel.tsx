@@ -90,14 +90,21 @@ const AutonomousPanel: React.FC = () => {
               {f.desc}
             </p>
             
-            <div className="mt-auto pt-8 border-t border-white/5 flex flex-col gap-4">
+            {/* Enhanced Detailed Logic View Button Section */}
+            <div className="mt-auto pt-8 border-t border-white/5">
               <button 
                 onClick={() => setActiveDetail(f)}
-                className="flex items-center gap-2 text-[11px] font-black text-emerald-400 uppercase tracking-widest hover:text-white transition-colors group/btn"
+                className="w-full relative py-5 px-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-center gap-4 group/btn overflow-hidden transition-all duration-500 hover:bg-emerald-500/10 hover:border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.05)] hover:shadow-[0_0_25px_rgba(16,185,129,0.15)]"
               >
-                 <span className="w-12 h-[1.5px] bg-emerald-500 group-hover/btn:w-16 transition-all"></span>
-                 Detailed Logic View
-                 <i className="fas fa-arrow-right ml-1 opacity-0 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 transition-all"></i>
+                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/5 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000"></div>
+                 
+                 <div className="flex items-center gap-3 relative z-10">
+                    <span className="w-10 h-[2px] bg-emerald-500 group-hover/btn:w-14 transition-all duration-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+                    <span className="text-[12px] font-black text-emerald-400 uppercase tracking-[0.2em] group-hover/btn:text-white transition-colors duration-300">
+                       Detailed Logic View
+                    </span>
+                    <i className="fas fa-arrow-right text-[10px] text-emerald-400 opacity-0 -translate-x-4 group-hover/btn:opacity-100 group-hover/btn:translate-x-0 group-hover/btn:text-white transition-all duration-500"></i>
+                 </div>
               </button>
             </div>
           </div>
@@ -119,7 +126,6 @@ const AutonomousPanel: React.FC = () => {
              </button>
              
              <div className="flex flex-col lg:flex-row gap-12 mt-4">
-                {/* Left: Intro & Visual Icon */}
                 <div className="lg:w-1/3 space-y-8">
                   <div className={`w-24 h-24 rounded-[2rem] bg-gradient-to-br ${activeDetail.color} flex items-center justify-center shadow-glow-emerald`}>
                       <i className={`fas ${activeDetail.icon} text-4xl text-white`}></i>
@@ -134,13 +140,11 @@ const AutonomousPanel: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Right: Detailed Logic Steps (The "Diagram") */}
                 <div className="lg:w-2/3">
                   <h6 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-8 flex items-center gap-2">
                     <i className="fas fa-project-diagram"></i> System Logic Flow
                   </h6>
                   <div className="space-y-4 relative">
-                    {/* Vertical Line Connector */}
                     <div className="absolute left-7 top-10 bottom-10 w-[2px] bg-gradient-to-b from-emerald-500 via-blue-500 to-transparent opacity-20 hidden sm:block"></div>
                     
                     {activeDetail.logicSteps.map((step, idx) => (
@@ -161,7 +165,6 @@ const AutonomousPanel: React.FC = () => {
                     ))}
                   </div>
 
-                  {/* Summary Box */}
                   <div className="mt-8 p-6 rounded-3xl bg-emerald-500/10 border border-emerald-500/20">
                      <div className="flex items-start gap-4">
                         <i className="fas fa-info-circle text-emerald-400 mt-1"></i>
