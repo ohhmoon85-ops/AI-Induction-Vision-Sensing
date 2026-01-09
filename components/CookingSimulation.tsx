@@ -101,6 +101,26 @@ const CookingSimulation: React.FC<Props> = ({ recipe, isActive, onComplete }) =>
               else { s.powerLevel = 10; s.vesselTemp += 9; s.status = "과열 오버슈팅 (탄화 위험)"; }
             }
           }
+        } else if (recipe.id === 'reservation') {
+          if (isAI) {
+            if (time < 70) {
+              s.vesselTemp += 1.5;
+              s.status = "예약 조리: 목표 온도로 정밀 가열";
+              s.powerLevel = 6;
+            } else {
+              s.vesselTemp = 85;
+              s.status = "조리물 실측: 안전 보온 모드 전환";
+              s.powerLevel = 2;
+            }
+          } else {
+            // 기성 제품은 지능형 예약 가열을 지원하지 않거나 단순 타이머만 가능
+            s.vesselTemp = 25; 
+            s.status = "기능 미지원 (안전 규제 제한)";
+            s.powerLevel = 0;
+            if (time > 10) {
+               s.status = "원격 예약 가열 불가 (화재 위험)";
+            }
+          }
         }
       });
 
@@ -122,6 +142,13 @@ const CookingSimulation: React.FC<Props> = ({ recipe, isActive, onComplete }) =>
             const s = states[brand];
             return (
               <div key={brand} className={`p-6 rounded-[2.5rem] glass border relative overflow-hidden transition-all duration-300 ${isAI ? 'border-emerald-500/50 bg-emerald-500/5 shadow-glow-emerald' : 'border-white/5 opacity-70'}`}>
+                {recipe.id === 'reservation' && !isAI && (
+                  <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px] z-10 flex items-center justify-center p-4 text-center">
+                    <div className="bg-red-500/20 border border-red-500/40 text-red-400 text-[10px] font-black px-3 py-2 rounded-xl uppercase tracking-tighter">
+                      No Reservation Logic<br/>(Safety Constraint)
+                    </div>
+                  </div>
+                )}
                 {s.disturbanceDetected && !isAI && recipe.id === 'pancake' && (
                   <div className="absolute inset-0 bg-orange-600/10 animate-pulse flex items-center justify-center">
                     <div className="bg-red-600/90 text-xs font-black px-4 py-1.5 rounded-full text-white shadow-2xl tracking-widest">CENTER BURNING</div>

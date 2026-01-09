@@ -18,6 +18,13 @@ const ComparisonTable: React.FC = () => {
       highlight: true
     },
     {
+      category: "지능형 예약 조리",
+      samsungLg: "미지원 (화재 위험 및 정밀 센서 부재로 불가)",
+      smartCooking: "센서 기반 자동 화력 조절 예약 시스템",
+      patentTech: "목표 온도 도달 시 보온 자동 전환",
+      highlight: true
+    },
+    {
       category: "조리 자동화",
       samsungLg: "수동 출력/시간 조절 중심 (레시피 스캔)",
       smartCooking: "생성형 AI 모델의 조리 형태 스스로 인지",
@@ -63,7 +70,11 @@ const ComparisonTable: React.FC = () => {
             {comparisonData.map((row, idx) => (
               <tr key={idx} className={`group transition-colors ${row.highlight ? 'bg-emerald-500/5' : 'hover:bg-white/5'}`}>
                 <td className="p-6 text-sm font-bold text-slate-400">{row.category}</td>
-                <td className="p-6 text-sm text-slate-500 italic">{row.samsungLg}</td>
+                <td className="p-6 text-sm text-slate-500 italic">
+                  {row.category === "지능형 예약 조리" ? (
+                    <span className="text-red-400/80 font-bold underline decoration-red-500/30 underline-offset-4">{row.samsungLg}</span>
+                  ) : row.samsungLg}
+                </td>
                 <td className="p-6 text-sm text-emerald-100 font-medium">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></div>
@@ -81,14 +92,14 @@ const ComparisonTable: React.FC = () => {
           </tbody>
         </table>
       </div>
-      <div className="flex flex-col md:flex-row gap-4 justify-center">
-        <div className="glass px-6 py-3 rounded-2xl border border-emerald-500/20 flex items-center gap-3">
-          <span className="text-sm font-black text-emerald-400 uppercase">AI-Logic</span>
-          <span className="text-sm text-slate-400">실시간 생성형 제어 모델로 조리 상황별 맞춤 대응</span>
+      <div className="flex flex-col md:flex-row gap-4 justify-center text-center px-4">
+        <div className="glass px-6 py-4 rounded-2xl border border-red-500/20 flex flex-col items-center gap-1">
+          <span className="text-sm font-black text-red-400 uppercase">기성제품 한계</span>
+          <span className="text-xs text-slate-400">실시간 조리물 상태(비점, 수분량) 확인 불가로 원격/예약 가열 시 화재 위험 존재</span>
         </div>
-        <div className="glass px-6 py-3 rounded-2xl border border-amber-500/20 flex items-center gap-3">
-          <span className="text-sm font-black text-amber-400 uppercase">Uniformity+</span>
-          <span className="text-sm text-slate-400">다중 센서 퓨전으로 중앙/외곽 열 평형 유지</span>
+        <div className="glass px-6 py-4 rounded-2xl border border-emerald-500/20 flex flex-col items-center gap-1">
+          <span className="text-sm font-black text-emerald-400 uppercase">AI-Induction 솔루션</span>
+          <span className="text-xs text-slate-400">비접촉 IR 센서로 조리물 온도를 직접 읽어 끓어넘침 및 빈 냄비 가열 원천 차단</span>
         </div>
       </div>
     </div>

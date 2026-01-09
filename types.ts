@@ -73,5 +73,18 @@ export const RECIPES: Recipe[] = [
       { time: 60, instruction: '냉동 생선 투입' },
       { time: 100, instruction: '복구 완료' }
     ]
+  },
+  {
+    id: 'reservation',
+    name: '지능형 예약 조리 (Smart Timer)',
+    targetTemp: 85,
+    icon: '⏲️',
+    safetyRequirement: '저온 유지 및 화재 원천 차단',
+    description: '단순 타이머가 아닌 센서 실측 기반 예약: 목표 온도 도달 시 화력을 조절하여 보온 모드로 자동 전환하며, 수분 부족 시 안전하게 차단합니다.',
+    stages: [
+      { time: 0, instruction: '예약 가열 시작' },
+      { time: 60, instruction: '목표 온도 도달 및 저온 유지' },
+      { time: 120, instruction: '조리 완료 및 자동 보온' }
+    ]
   }
 ];
